@@ -14,7 +14,8 @@ export function decide(input) {
   if (!file) return null;
 
   const content = `${input.tool_input?.content ?? ''}\n${input.tool_input?.new_string ?? ''}`;
-  if (!isDocsPath(file) && /innerHTML/.test(content)) {
+  const prose = isDocsPath(file) && /\.(md|txt)$/i.test(file);
+  if (!prose && /innerHTML/.test(content)) {
     return `Denied: ${file} would use innerHTML, which AGENTS.md forbids; render user text with textContent or DOM APIs.`;
   }
 
