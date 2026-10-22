@@ -25,6 +25,9 @@ test('forbidden commands are denied with one sentence', () => {
       ['git push --force origin main', 'Denied: a forced push rewrites shared history; not allowed.'],
       ['git commit --no-verify -m "S1: x (R-01)"', 'Denied: --no-verify skips the gate, and the gate is the point; fix what it reports instead.'],
       ['git commit --amend -m "S1: x (R-01)"', 'Denied: git commit --amend rewrites a committed slice; make a new commit.'],
+      ['git -c user.name=x commit --amend -m "S1: x (R-01)"', 'Denied: git commit --amend rewrites a committed slice; make a new commit.'],
+      ['git commit -n -m "S1: x (R-01)"', 'Denied: -n on git commit skips the gate, and the gate is the point; fix what it reports instead.'],
+      ['git -c core.hooksPath=/dev/null commit -m "S1: x (R-01)"', 'Denied: redirecting git hooks or the repository bypasses the gate; run plain git in the project.'],
     ];
     for (const [command, sentence] of cases) {
       const r = guard(root, command);

@@ -101,3 +101,11 @@ test('CLI prints the slice files, fails on an unknown slice', () => {
     cleanup(root);
   }
 });
+
+test('paths outside the root and case variants of human-only files are refused', () => {
+  assert.equal(toProjectPath('/p/app', '../other/x.js'), '../other/x.js');
+  assert.equal(toProjectPath('/p/app', '/etc/passwd'), '../../etc/passwd');
+  assert.match(isHumanOnly('/p/app', '../other/x.js'), /outside the project/);
+  assert.match(isHumanOnly('/p/app', 'Docs/Decisions/ADR-001.md'), /human decision file/);
+  assert.match(isHumanOnly('/p/app', 'agents.md'), /human decision file/);
+});

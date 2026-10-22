@@ -92,14 +92,21 @@ export function normalizePath(p) {
 export function toProjectPath(root, filePath) {
   const p = String(filePath ?? '');
   if (!p) return '';
-  const rel = isAbsolute(p) ? relative(resolve(root), resolve(p)) : p;
+  const rel = relative(resolve(root), resolve(root, p));
   return normalizePath(rel);
 }
 
+/** True when a project path points outside the root ("../x" after normalisation). */
+export function escapesRoot(relPath) {
+  return relPath === '..' || relPath.startsWith('../') || isAbsolute(relPath);
+}
+
 export function isHumanOnly(root, relPath) {
-  if (HUMAN_ONLY.includes(relPath)) return `${relPath} is a human decision file`;
-  if (HUMAN_ONLY_PREFIXES.some((prefix) => relPath.startsWith(prefix))) return `${relPath} is a human decision file`;
-  if (relPath === REQUIREMENTS_FILE && requirementsApproved(root)) {
+  const lower = relPath.toLowerCase();
+  if (escapesRoot(relPath)) return `${relPath} is outside the project`;
+  if (HUMAN_ONLY.some((f) => f.toLowerCase() === lower)) return `${relPath} is a human decision file`;
+  if (HUMAN_ONLY_PREFIXES.some((prefix) => lower.startsWith(prefix.toLowerCase()))) return `${relPath} is a human decision file`;
+  if (lower === REQUIREMENTS_FILE.toLowerCase() && requirementsApproved(root)) {
     return `${REQUIREMENTS_FILE} is approved, changing a requirement is a human decision`;
   }
   return null;

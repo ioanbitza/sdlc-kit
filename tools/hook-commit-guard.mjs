@@ -13,7 +13,9 @@ export const FORBIDDEN = [
   [/\brm\s+(-[a-zA-Z]*r[a-zA-Z]*f|-[a-zA-Z]*f[a-zA-Z]*r)[a-zA-Z]*\b/, 'Denied: rm -rf is not allowed; remove files one by one with git rm, or ask the human.'],
   [/\bgit\s+push\b[^|;&]*(--force\b|-f\b|--force-with-lease\b)/, 'Denied: a forced push rewrites shared history; not allowed.'],
   [/--no-verify\b/, 'Denied: --no-verify skips the gate, and the gate is the point; fix what it reports instead.'],
-  [/\bgit\s+commit\b[^|;&]*--amend\b/, 'Denied: git commit --amend rewrites a committed slice; make a new commit.'],
+  [/\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s-n\b|\s-[a-zA-Z]*n[a-zA-Z]*\s)/, 'Denied: -n on git commit skips the gate, and the gate is the point; fix what it reports instead.'],
+  [/\bgit\b[^|;&]*(core\.hooksPath|--git-dir\b|--work-tree\b)/, 'Denied: redirecting git hooks or the repository bypasses the gate; run plain git in the project.'],
+  [/\bgit\b[^|;&]*\bcommit\b[^|;&]*--amend\b/, 'Denied: git commit --amend rewrites a committed slice; make a new commit.'],
 ];
 
 /** The subject line of the -m / --message argument, including the heredoc form -m "$(cat <<'EOF' ... EOF)". */
@@ -47,7 +49,7 @@ export function decide(input) {
   const command = String(input.tool_input?.command ?? '');
   if (!command.trim()) return null;
   for (const [pattern, reason] of FORBIDDEN) if (pattern.test(command)) return reason;
-  if (!/\bgit\s+commit\b/.test(command)) return null;
+  if (!/\bgit\b[^|;&]*\bcommit\b/.test(command)) return null;
 
   const root = projectRoot(input);
   const message = commitMessage(command);
