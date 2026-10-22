@@ -11,7 +11,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { runTests } from './hook-common.mjs';
+import { runTests, isMain } from './hook-common.mjs';
 import { trace } from './trace.mjs';
 import {
   allowedScope,
@@ -169,6 +169,6 @@ function cli(argv) {
   return result.ok ? 0 : 1;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
   process.exit(cli(process.argv.slice(2)));
 }

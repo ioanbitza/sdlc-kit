@@ -48,7 +48,9 @@ test('allowedScope: no slice allows docs/** only', () => {
     const scope = allowedScope(root);
     assert.equal(scope.slice, null);
     assert.ok(isInScope('docs/PLAN.md', scope));
+    assert.ok(isInScope('.githooks/pre-commit', scope), 'setup files the gate accepts in a no-slice commit');
     assert.ok(!isInScope('src/a.js', scope));
+    assert.ok(!isInScope('index.html', scope));
   } finally {
     cleanup(root);
   }

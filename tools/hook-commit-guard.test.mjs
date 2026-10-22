@@ -27,7 +27,11 @@ test('forbidden commands are denied with one sentence', () => {
       ['git commit --amend -m "S1: x (R-01)"', 'Denied: git commit --amend rewrites a committed slice; make a new commit.'],
       ['git -c user.name=x commit --amend -m "S1: x (R-01)"', 'Denied: git commit --amend rewrites a committed slice; make a new commit.'],
       ['git commit -n -m "S1: x (R-01)"', 'Denied: -n on git commit skips the gate, and the gate is the point; fix what it reports instead.'],
+      ['GIT_DIR=/tmp/x git commit -m "S1: x (R-01)"', 'Denied: redirecting git hooks or the repository bypasses the gate; run plain git in the project.'],
+      ['ln -s /etc/passwd src/x.js', 'Denied: symlinks can point outside the project; copy the file or ask the human.'],
       ['git -c core.hooksPath=/dev/null commit -m "S1: x (R-01)"', 'Denied: redirecting git hooks or the repository bypasses the gate; run plain git in the project.'],
+      ['git config core.hooksPath /tmp/elsewhere', 'Denied: redirecting git hooks or the repository bypasses the gate; run plain git in the project.'],
+      ['git config --unset core.hooksPath', 'Denied: redirecting git hooks or the repository bypasses the gate; run plain git in the project.'],
     ];
     for (const [command, sentence] of cases) {
       const r = guard(root, command);
@@ -42,7 +46,7 @@ test('forbidden commands are denied with one sentence', () => {
 test('any other command passes silently', () => {
   const root = makeProject();
   try {
-    for (const command of ['ls -la', 'node --test', 'git status', 'git add -A', 'rm .sdlc/slice', 'git push origin main']) {
+    for (const command of ['ls -la', 'node --test', 'git status', 'git add -A', 'rm .sdlc/slice', 'git push origin main', 'git config core.hooksPath .githooks', 'chmod +x .githooks/pre-commit && git config core.hooksPath .githooks && git config core.hooksPath']) {
       const r = guard(root, command);
       assert.equal(r.status, 0, command);
       assert.equal(r.stdout + r.stderr, '', command);

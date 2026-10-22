@@ -1,7 +1,17 @@
 // Shared by the four hooks: read the hook JSON from stdin, find the project root, run the tests.
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, realpathSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+/** True when the module at metaUrl is the script Node was started with, also when the kit is reached through a symlink. */
+export function isMain(metaUrl) {
+  try {
+    return Boolean(process.argv[1]) && realpathSync(resolve(process.argv[1])) === realpathSync(fileURLToPath(metaUrl));
+  } catch {
+    return false;
+  }
+}
 
 export function readHookInput() {
   try {

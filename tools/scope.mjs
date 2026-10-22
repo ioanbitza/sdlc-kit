@@ -7,7 +7,7 @@
 // Usage: node scope.mjs S3 [--root <project dir>]
 import { readFileSync, existsSync } from 'node:fs';
 import { join, isAbsolute, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { isMain } from './hook-common.mjs';
 
 export const PLAN_FILE = 'docs/PLAN.md';
 export const REQUIREMENTS_FILE = 'docs/REQUIREMENTS.md';
@@ -122,7 +122,7 @@ export function isSetupPath(relPath) {
 
 /**
  * What may change right now: the active slice's files plus docs/MANUAL-CHECKS.md,
- * or docs/** when no slice is active. Reports a plan or slice that is missing.
+ * or docs/** and the setup files /sdlc-kit:init installs when no slice is active. Reports a plan or slice that is missing.
  */
 export function allowedScope(root) {
   const slice = activeSlice(root);
@@ -136,7 +136,7 @@ export function allowedScope(root) {
 
 export function isInScope(relPath, scope) {
   if (scope.error) return false;
-  if (scope.docsOnly) return isDocsPath(relPath);
+  if (scope.docsOnly) return isDocsPath(relPath) || isSetupPath(relPath);
   return scope.files.includes(relPath);
 }
 
@@ -170,6 +170,6 @@ function cli(argv) {
   return 0;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
   process.exit(cli(process.argv.slice(2)));
 }

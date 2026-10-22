@@ -3,7 +3,7 @@
 // Human-only files and any innerHTML are always denied. Denial: exit 2, one sentence on stderr.
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readHookInput, projectRoot, deny } from './hook-common.mjs';
+import { readHookInput, projectRoot, deny, isMain } from './hook-common.mjs';
 import { toProjectPath, isHumanOnly, allowedScope, isInScope } from './scope.mjs';
 
 export function decide(input) {
@@ -32,7 +32,7 @@ export function decide(input) {
   return `${scope.slice} allows ${scope.files.join(', ')}. ${file} is not in the plan. Stop and ask the human.`;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
   const reason = decide(readHookInput());
   if (reason) deny(reason);
   process.exit(0);

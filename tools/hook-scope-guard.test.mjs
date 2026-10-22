@@ -47,6 +47,8 @@ test('no slice: docs/** allowed, code denied', () => {
   try {
     assert.equal(guard(writeInput(root, 'docs/PLAN.md')).status, 0);
     assert.equal(guard(writeInput(root, 'docs/REVIEW.md')).status, 0);
+    assert.equal(guard(writeInput(root, '.githooks/pre-commit')).status, 0, 'init setup files are allowed with no slice');
+    assert.equal(guard(writeInput(root, '.github/workflows/gate.yml')).status, 0);
     const r = guard(editInput(root, 'src/domain/customers.js'));
     assert.equal(r.status, 2);
     assert.equal(r.stderr.trim(), 'No slice is active: only docs/** may change. src/domain/customers.js needs /sdlc-kit:implement-slice S<n> first.');
