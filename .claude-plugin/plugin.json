@@ -1,0 +1,9 @@
+{
+  "name": "sdlc-kit",
+  "version": "2.0.0",
+  "description": "AI-SDLC kit: requirements with IDs, sliced plans, test-first slices on a cheap model, independent review on a strong model, and one gate script enforced by hooks, git hooks and CI.",
+  "author": { "name": "Ioan Bita" },
+  "repository": "https://github.com/ioanbitza/sdlc-kit",
+  "license": "MIT",
+  "keywords": ["sdlc", "requirements", "gates", "traceability", "hooks"]
+}

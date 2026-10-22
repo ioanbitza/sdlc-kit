@@ -1,0 +1,9 @@
+#!/bin/sh
+# sdlc-kit pre-commit: runs the one gate on the staged files (tests, scope, trace).
+# Installed by /sdlc-kit:init, which also sets `git config core.hooksPath .githooks`.
+KIT="$(cat .sdlc/kit-path 2>/dev/null)"
+if [ -z "$KIT" ] || [ ! -f "$KIT/tools/gate.mjs" ]; then
+  echo "pre-commit: .sdlc/kit-path is missing or points nowhere; run /sdlc-kit:init" >&2
+  exit 1
+fi
+exec node "$KIT/tools/gate.mjs" --staged

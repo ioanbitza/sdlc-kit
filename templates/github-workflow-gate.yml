@@ -1,0 +1,28 @@
+name: gate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ioanbitza/sdlc-kit
+          path: .sdlc-kit
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Tests
+        run: node --test
+
+      - name: Gate (strict, manual checks must be ticked)
+        run: node .sdlc-kit/tools/gate.mjs --strict

@@ -1,0 +1,9 @@
+#!/bin/sh
+# sdlc-kit commit-msg: the subject must look like `S<n>: what changed (R-xx, R-yy)` with IDs from docs/REQUIREMENTS.md.
+# A docs-only commit with no active slice may use any message. Same regex as the Claude commit hook.
+KIT="$(cat .sdlc/kit-path 2>/dev/null)"
+if [ -z "$KIT" ] || [ ! -f "$KIT/tools/gate.mjs" ]; then
+  echo "commit-msg: .sdlc/kit-path is missing or points nowhere; run /sdlc-kit:init" >&2
+  exit 1
+fi
+exec node "$KIT/tools/gate.mjs" --staged --only commit --message-file "$1"
