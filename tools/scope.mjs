@@ -24,6 +24,8 @@ export const HUMAN_ONLY_PREFIXES = ['docs/decisions/', '.sdlc/'];
 /** Setup files that /sdlc-kit:init writes through Bash; the gate accepts them in a no-slice commit. */
 export const SETUP_FILES = ['.gitignore'];
 export const SETUP_PREFIXES = ['.githooks/', '.github/'];
+/** The only files the agent may write in those folders: what /sdlc-kit:init installs. */
+export const SETUP_WRITABLE = ['.githooks/pre-commit', '.githooks/commit-msg', '.github/workflows/gate.yml'];
 
 export function readText(path) {
   return existsSync(path) ? readFileSync(path, 'utf8') : '';
@@ -136,7 +138,7 @@ export function allowedScope(root) {
 
 export function isInScope(relPath, scope) {
   if (scope.error) return false;
-  if (scope.docsOnly) return isDocsPath(relPath) || isSetupPath(relPath);
+  if (scope.docsOnly) return isDocsPath(relPath) || SETUP_FILES.includes(relPath) || SETUP_WRITABLE.includes(relPath);
   return scope.files.includes(relPath);
 }
 

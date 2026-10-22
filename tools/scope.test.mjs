@@ -111,3 +111,11 @@ test('paths outside the root and case variants of human-only files are refused',
   assert.match(isHumanOnly('/p/app', 'Docs/Decisions/ADR-001.md'), /human decision file/);
   assert.match(isHumanOnly('/p/app', 'agents.md'), /human decision file/);
 });
+
+test('with no slice, only the init files may be written under .githooks and .github', () => {
+  const scope = { docsOnly: true, files: [] };
+  assert.equal(isInScope('.githooks/pre-commit', scope), true);
+  assert.equal(isInScope('.github/workflows/gate.yml', scope), true);
+  assert.equal(isInScope('.githooks/evil', scope), false);
+  assert.equal(isInScope('.github/workflows/other.yml', scope), false);
+});

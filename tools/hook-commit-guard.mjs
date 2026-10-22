@@ -53,6 +53,7 @@ export function decide(input) {
   const command = String(input.tool_input?.command ?? '');
   if (!command.trim()) return null;
   const checked = command
+    .replace(/\\\r?\n/g, ' ')
     .split(/\|\||&&|[;|\n]/)
     .filter((segment) => !INIT_HOOKS_PATH.test(segment))
     .join(';');
