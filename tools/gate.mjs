@@ -93,7 +93,7 @@ function checkScope(root, files, mode) {
 function checkTrace(root, strict, files, staged) {
   if (!existsSync(join(root, REQUIREMENTS_FILE))) return { label: 'trace', ok: true, text: 'no requirements yet' };
   const slice = allowedScope(root).slice;
-  if (!slice && staged && files.length && files.every((f) => isDocsPath(f) || isSetupPath(f))) {
+  if (!slice && staged && files.every((f) => isDocsPath(f) || isSetupPath(f))) {
     return { label: 'trace', ok: true, text: 'docs only, not checked' };
   }
   const result = trace({ root, listed: !strict, slice: slice ?? undefined });
@@ -118,7 +118,7 @@ function checkCommit(root, message, files) {
   const subject = message.split('\n')[0].trim();
   const quoted = `"${subject}"`;
   const slice = allowedScope(root).slice;
-  const docsOnly = !slice && files.length > 0 && files.every((f) => isDocsPath(f) || isSetupPath(f));
+  const docsOnly = !slice && files.every((f) => isDocsPath(f) || isSetupPath(f));
   const match = subject.match(COMMIT_MESSAGE_PATTERN);
   if (!match) {
     if (docsOnly) return { label: 'commit', ok: true, text: `${quoted} ok (docs only, no slice active)` };

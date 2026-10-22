@@ -11,7 +11,7 @@ Node 22 or newer, no dependencies.
 
 One session, one flag: `claude --plugin-dir ~/sdlc-kit` (clone https://github.com/ioanbitza/sdlc-kit to `~/sdlc-kit` first).
 For a team: put the kit in a marketplace folder, `/plugin marketplace add <folder>`, then `/plugin install sdlc-kit@<marketplace>`.
-In the project, run `/sdlc-kit:init` once. It installs the git hooks and the CI workflow and writes `.sdlc/kit-path`.
+In the project, add `.claude/settings.json` with `{"includeCoAuthoredBy": false}` if you want commits without AI trailers, then run `/sdlc-kit:init` once. It installs the git hooks and the CI workflow and writes `.sdlc/kit-path`.
 
 ## The flow (seven skills, in this order)
 
@@ -24,6 +24,8 @@ In the project, run `/sdlc-kit:init` once. It installs the git hooks and the CI 
 | 4 | `/sdlc-kit:build-slices S2 S3 S4` | builder agent (sonnet, fresh context) | the remaining slices in sequence, stops at the first red gate |
 | 5 | `/sdlc-kit:review-change` | reviewer agent (opus, fresh context) | `docs/REVIEW.md`, verdict `MERGE` or `FIX FIRST` |
 | 6 | `/sdlc-kit:ship` | any | `docs/TRACE.md`, `docs/PR.md`, manual-check warning, `/cost` reminder; never pushes |
+
+After a `FIX FIRST` review: a finding that needs a product decision goes into a requirement or an ADR by the human; then run `/sdlc-kit:implement-slice S<n>` again for the slice the finding belongs to, with the finding in the prompt. The slice reopens, the fix is test-first, the commit goes through the same gate.
 
 Decisions stay with the human: the stack and the AI boundaries live in `docs/decisions/ADR-*.md`, the plan marks anything else `NEEDS HUMAN`, and the human answers by editing an ADR, not by chatting.
 

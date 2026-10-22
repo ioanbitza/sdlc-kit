@@ -10,7 +10,7 @@ model: sonnet
 The kit path is in `.sdlc/kit-path` (written by `/sdlc-kit:init`). Below, `$KIT` means `$(cat .sdlc/kit-path)`.
 
 ## Steps
-0. Mark the slice active, so the guards know what you are allowed to touch: `mkdir -p .sdlc && echo $ARGUMENTS > .sdlc/slice`. Then `node "$KIT/tools/scope.mjs" $ARGUMENTS` prints the files you may change.
+0. Mark the slice active, so the guards know what you are allowed to touch: `mkdir -p .sdlc && echo S<n> > .sdlc/slice` (only the slice id, the first word of `$ARGUMENTS`). Then `node "$KIT/tools/scope.mjs" $ARGUMENTS` prints the files you may change.
 1. Read the slice in `docs/PLAN.md`, its requirements in `docs/REQUIREMENTS.md`, and `AGENTS.md`.
 2. Write a three-line start note in the chat: what you will change, and what you are assuming.
 3. Tests first for domain and storage: write them, run `node --test`, confirm they fail for the right reason (a missing module or a wrong value, not a syntax error).

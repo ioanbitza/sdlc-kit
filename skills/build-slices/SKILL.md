@@ -4,6 +4,7 @@ description: Build several plan slices in sequence in a separate builder agent, 
 argument-hint: S<n> S<m> ...
 context: fork
 agent: builder
+model: sonnet
 ---
 
 # Build slices in sequence

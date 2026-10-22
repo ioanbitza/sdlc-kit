@@ -10,7 +10,7 @@ description: Final gate, traceability matrix and pull request description for th
 ## Steps
 1. Run the gate on the working tree: `node "$KIT/tools/gate.mjs"`. If it fails, stop and report the failing line. Do not fix anything here.
 2. Write the trace matrix: `node "$KIT/tools/trace.mjs" --markdown > docs/TRACE.md`. Columns: requirement, title, tests, commits, manual check status (none, listed, passed).
-3. Count the manual checks in `docs/MANUAL-CHECKS.md` (`- [ ]` listed, `- [x]` passed) and print this line exactly: `manual checks: <listed> listed, <passed> passed; the unticked ones stay open for QA`. This is a warning, not a failure. `gate.mjs --strict` (the CI workflow) is the one that demands ticks.
+3. Run `node "$KIT/tools/trace.mjs"` and take its manual-check numbers (requirement IDs with a `- [ ]` or `- [x]` line in `docs/MANUAL-CHECKS.md`), then print this line exactly: `manual checks: <listed> listed, <passed> passed; the unticked ones stay open for QA`. This is a warning, not a failure. `gate.mjs --strict` (the CI workflow) is the one that demands ticks.
 4. Write `docs/PR.md` with these sections, short:
    - **What**: one paragraph, then the slice list from `git log --oneline` (first commit of the branch to HEAD).
    - **Why**: the brief in two lines and a link to `docs/REQUIREMENTS.md`.

@@ -4,7 +4,7 @@
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readHookInput, projectRoot, deny, isMain } from './hook-common.mjs';
-import { toProjectPath, isHumanOnly, allowedScope, isInScope } from './scope.mjs';
+import { toProjectPath, isHumanOnly, allowedScope, isInScope, isDocsPath } from './scope.mjs';
 
 export function decide(input) {
   const tool = input.tool_name;
@@ -14,7 +14,7 @@ export function decide(input) {
   if (!file) return null;
 
   const content = `${input.tool_input?.content ?? ''}\n${input.tool_input?.new_string ?? ''}`;
-  if (/innerHTML/.test(content)) {
+  if (!isDocsPath(file) && /innerHTML/.test(content)) {
     return `Denied: ${file} would use innerHTML, which AGENTS.md forbids; render user text with textContent or DOM APIs.`;
   }
 
