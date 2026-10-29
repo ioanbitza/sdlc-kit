@@ -1,0 +1,19 @@
+{
+  "name": "sdlc-kit",
+  "version": "1.0.0",
+  "description": "Numbered requirements reviewed by a product owner, a domain expert and a legal role, a sliced plan, test-first slices on a cheap model, a finder review (correctness, security, contract, domain, legal) with a defect-planting verifier, one gate script run by hooks, git hooks and CI.",
+  "author": {
+    "name": "Ioan Bita"
+  },
+  "repository": "https://github.com/ioanbitza/sdlc-kit",
+  "license": "MIT",
+  "keywords": [
+    "sdlc",
+    "requirements",
+    "gates",
+    "traceability",
+    "hooks",
+    "review",
+    "mutation-testing"
+  ]
+}
